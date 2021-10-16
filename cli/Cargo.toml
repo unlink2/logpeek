@@ -1,0 +1,15 @@
+[package]
+name = "logpeek-cli"
+version = "0.1.0"
+authors = ["Lukas Krickl <lukas@krickl.dev>"]
+description = "cli"
+license = "MIT"
+homepage = "https://github.com/unlink2/logpeek"
+edition = "2018"
+
+[[bin]]
+name = "logpeek"
+path = "src/main.rs"
+
+[dependencies]
+logpeek = {path = "../lib"}
