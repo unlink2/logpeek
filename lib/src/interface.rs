@@ -48,43 +48,46 @@ impl Interface {
         Ok(self)
     }
 
-    fn check_stdin(&self) -> Result<String, Error> {
+    fn check_stdin(&self, writer: &mut dyn std::io::Write) -> Result<(), Error> {
         let stdin = std::io::stdin();
         let reader = BufReader::new(stdin);
 
-        let mut result = String::new();
         for line in reader.lines() {
-            result.push_str(&self.config.check(&line?)?);
+            if writer.write(&self.config.check(&line?)?.as_bytes())? > 0 {
+                writer.write(&[b'\n'])?;
+            }
         }
 
-        Ok(result)
+        Ok(())
     }
 
-    fn check_file(&self, input_file: &str) -> Result<String, Error> {
+    fn check_file(&self, input_file: &str, writer: &mut dyn std::io::Write) -> Result<(), Error> {
         let reader = BufReader::new(std::fs::File::open(input_file)?);
 
-        let mut result = String::new();
         for line in reader.lines() {
-            result.push_str(&self.config.check(&line?)?);
+            if writer.write(&self.config.check(&line?)?.as_bytes())? > 0 {
+                writer.write(&[b'\n'])?;
+            }
         }
 
-        Ok(result)
+        Ok(())
     }
 
-    pub fn check(&self) -> Result<String, Error> {
+    pub fn check(&self, writer: &mut dyn std::io::Write) -> Result<(), Error> {
         if let Some(input_file) = &self.opts.input_file {
-            self.check_file(input_file)
+            self.check_file(input_file, writer)
         } else {
-            self.check_stdin()
+            self.check_stdin(writer)
         }
     }
 
-    pub fn print_json(&self) -> Result<Option<String>, Error> {
+    pub fn print_json(&self, writer: &mut dyn std::io::Write) -> Result<(), Error> {
         if self.opts.print_json {
-            Ok(Some(serde_json::to_string(&self.config)?))
-        } else {
-            Ok(None)
+            if writer.write(serde_json::to_string(&self.config)?.as_bytes())? > 0 {
+                writer.write(&[b'\n'])?;
+            }
         }
+        Ok(())
     }
 }
 

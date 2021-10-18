@@ -1,12 +1,11 @@
 use logpeek::{Error, Interface};
 
 fn main() -> Result<(), Error> {
-    let interface = Interface::from_args()?;
-    println!("{}", interface.check()?);
+    let mut stdout = std::io::stdout();
 
-    if let Some(output) = interface.print_json()? {
-        println!("{}", output);
-    }
+    let interface = Interface::from_args()?;
+    interface.check(&mut stdout)?;
+    interface.print_json(&mut stdout)?;
 
     Ok(())
 }
