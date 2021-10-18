@@ -29,7 +29,43 @@ cargo install --path ./cli --locked
 
 ### Command line
 
+The following command will scan main.ccp for the word main.
+Use --help for more information and a list of available options.
+
+```sh
+logpeek ./main.cpp -r "main" -o "{}" -p
+```
+
 ### JSON Configuration
+
+The following json can be specified using the -c flag.
+It is functionally identical to the command line example above
+
+```json
+{
+  "conditions": [
+    {
+      "if_match": {
+        "kind": {
+          "Re": {
+            "expr": "main"
+          }
+        },
+        "or": [],
+        "and": [],
+        "not": false
+      },
+      "then": {
+        "Basic": {
+          "message": "{}"
+        }
+      },
+      "output_input": true,
+      "else_then": null
+    }
+  ]
+}
+```
 
 ## License
 
