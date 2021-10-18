@@ -30,12 +30,16 @@ impl Interface {
         } else {
             self.config = Config::new(vec![Condition::new(
                 Matcher::new(
-                    MatcherKind::Re(ReMatcher::new(&self.opts.regex)),
+                    MatcherKind::Re(ReMatcher::new(
+                        self.opts.regex.as_ref().unwrap_or(&"".into()),
+                    )),
                     vec![],
                     vec![],
                     self.opts.not,
                 ),
-                MatchResult::Basic(BasicMatchResult::new(&self.opts.output)),
+                MatchResult::Basic(BasicMatchResult::new(
+                    self.opts.output.as_ref().unwrap_or(&"".to_string()),
+                )),
                 self.opts.print_input,
                 None,
             )]);
@@ -103,8 +107,8 @@ pub struct Opts {
     print_json: bool,
 
     #[clap(short, long)]
-    output: String,
+    output: Option<String>,
 
     #[clap(short, long)]
-    regex: String,
+    regex: Option<String>,
 }
