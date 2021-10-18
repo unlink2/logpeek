@@ -74,6 +74,14 @@ impl Interface {
             self.check_stdin()
         }
     }
+
+    pub fn print_json(&self) -> Result<Option<String>, Error> {
+        if self.opts.print_json {
+            Ok(Some(serde_json::to_string(&self.config)?))
+        } else {
+            Ok(None)
+        }
+    }
 }
 
 #[derive(Default, Clap)]
@@ -90,6 +98,9 @@ pub struct Opts {
 
     #[clap(short, long)]
     print_input: bool,
+
+    #[clap(long)]
+    print_json: bool,
 
     #[clap(short, long)]
     output: String,

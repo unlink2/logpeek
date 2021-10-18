@@ -4,6 +4,10 @@
 ![](https://github.com/unlink2/logpeek/actions/workflows/build.yml/badge.svg)
 ![](https://github.com/unlink2/logpeek/actions/workflows/test.yml/badge.svg)
 
+Logpeek is a simple logfile regex matcher program.
+It allows matching a file line by line using regular expressions and can be configured
+using a JSON based configuration file.
+
 ## Table of content
 
 - [Installation](#Installation)
@@ -18,11 +22,14 @@ This program requires the latest version of Rust.
 To install minutecat-cli simplt clone the repository and run:
 
 ```sh
-cargo install --path ./cli
+cargo install --path ./cli --locked
 ```
 
 ## Usage
 
+### Command line
+
+### JSON Configuration
 
 ## License
 
