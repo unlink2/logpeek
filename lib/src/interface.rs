@@ -27,6 +27,8 @@ impl Interface {
         // load the entire config from file and ignore the rest!
         if let Some(config_file) = &self.opts.config_file {
             self.config = serde_json::from_reader(std::fs::File::open(config_file)?)?;
+        } else if let Some(json) = &self.opts.json {
+            self.config = serde_json::from_str(&json)?;
         } else {
             self.config = Config::new(vec![Condition::new(
                 Matcher::new(
@@ -98,6 +100,9 @@ pub struct Opts {
 
     #[clap(short, long)]
     config_file: Option<String>,
+
+    #[clap(short, long)]
+    json: Option<String>,
 
     #[clap(short, long)]
     not: bool,
