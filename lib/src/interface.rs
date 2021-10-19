@@ -3,7 +3,7 @@ use std::io::{BufRead, BufReader};
 use crate::{
     BasicMatchResult, Condition, Config, Error, MatchResult, Matcher, MatcherKind, ReMatcher,
 };
-use clap::{AppSettings, Clap};
+use clap::Parser;
 
 /// Interface between input parser and
 /// config options
@@ -91,9 +91,8 @@ impl Interface {
     }
 }
 
-#[derive(Default, Clap)]
+#[derive(Default, Parser)]
 #[clap(version = "0.1.0", author = "Lukas Krickl <lukas@krickl.dev>")]
-#[clap(setting = AppSettings::ColoredHelp)]
 pub struct Opts {
     input_file: Option<String>,
 
