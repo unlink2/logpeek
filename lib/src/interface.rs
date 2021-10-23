@@ -28,7 +28,7 @@ impl Interface {
         if let Some(config_file) = &self.opts.config_file {
             self.config = serde_json::from_reader(std::fs::File::open(config_file)?)?;
         } else if let Some(json) = &self.opts.json {
-            self.config = serde_json::from_str(&json)?;
+            self.config = serde_json::from_str(json)?;
         } else {
             self.config = Config::new(vec![Condition::new(
                 Matcher::new(
@@ -55,8 +55,8 @@ impl Interface {
         let reader = BufReader::new(stdin);
 
         for line in reader.lines() {
-            if writer.write(&self.config.check(&line?)?.as_bytes())? > 0 {
-                writer.write(&[b'\n'])?;
+            if writer.write(self.config.check(&line?)?.as_bytes())? > 0 {
+                writer.write_all(&[b'\n'])?;
             }
         }
 
@@ -67,8 +67,8 @@ impl Interface {
         let reader = BufReader::new(std::fs::File::open(input_file)?);
 
         for line in reader.lines() {
-            if writer.write(&self.config.check(&line?)?.as_bytes())? > 0 {
-                writer.write(&[b'\n'])?;
+            if writer.write(self.config.check(&line?)?.as_bytes())? > 0 {
+                writer.write_all(&[b'\n'])?;
             }
         }
 
@@ -84,10 +84,10 @@ impl Interface {
     }
 
     pub fn print_json(&self, writer: &mut dyn std::io::Write) -> Result<(), Error> {
-        if self.opts.print_json {
-            if writer.write(serde_json::to_string(&self.config)?.as_bytes())? > 0 {
-                writer.write(&[b'\n'])?;
-            }
+        if self.opts.print_json
+            && writer.write(serde_json::to_string(&self.config)?.as_bytes())? > 0
+        {
+            writer.write_all(&[b'\n'])?;
         }
         Ok(())
     }
