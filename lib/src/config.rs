@@ -1,28 +1,5 @@
 use crate::{Condition, Error};
 use serde::{Deserialize, Serialize};
-use trickle::{Node, Receiver};
-
-// TODO use this for output handling in the future!
-pub struct Event<T>
-where
-    T: Receiver<String, Error>,
-{
-    node: Node<String, T, Error>,
-    config: Config,
-}
-
-impl<T> Event<T>
-where
-    T: Receiver<String, Error>,
-{
-    pub fn new(config: Config, node: Node<String, T, Error>) -> Self {
-        Self { node, config }
-    }
-
-    pub fn check(&mut self, input: &str) -> Result<bool, Error> {
-        self.node.handle_mut(&self.config.check(input)?)
-    }
-}
 
 /// Covers all conditions needed for execution
 #[derive(Default, Clone, Serialize, Deserialize)]
