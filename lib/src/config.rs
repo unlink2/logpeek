@@ -19,10 +19,10 @@ where
         Self { conditions }
     }
 
-    pub fn check(&self, input: &str) -> Result<String, Error> {
+    pub fn check(&self, input: &str, path: Option<&str>) -> Result<String, Error> {
         let mut output = "".to_string();
         for cond in &self.conditions {
-            let res = cond.check(input)?;
+            let res = cond.check(input, path)?;
             if !res.is_empty() {
                 output.push_str(&res);
                 output.push('\n');
@@ -82,7 +82,7 @@ mod tests {
         ]);
 
         assert_eq!(
-            &config.check("test: Message").unwrap(),
+            &config.check("test: Message", None).unwrap(),
             "Then Result 1!\nThen Result 2!\n"
         );
     }

@@ -6,7 +6,7 @@ use crate::Matcher;
 use serde::{Deserialize, Serialize};
 
 pub trait Checkable {
-    fn check(&self, input: &str) -> Result<String, Error>;
+    fn check(&self, input: &str, path: Option<&str>) -> Result<String, Error>;
 }
 
 /// Condition for matching
@@ -54,15 +54,15 @@ where
         }
     }
 
-    fn exec(&self, input: &str, output: &mut String) -> Result<(), Error> {
-        if self.if_match.matches(input)? {
+    fn exec(&self, input: &str, path: Option<&str>, output: &mut String) -> Result<(), Error> {
+        if self.if_match.matches(input, path)? {
             if self.output_input {
                 output.push_str(&self.then.to_string().replace("{}", input));
             } else {
                 output.push_str(&self.then.to_string());
             }
         } else if let Some(else_then) = &self.else_then {
-            else_then.exec(input, output)?;
+            else_then.exec(input, path, output)?;
         }
 
         Ok(())
@@ -74,10 +74,10 @@ where
     TMatcher: Matchable + Default,
     TResponse: MatchResponse + Default,
 {
-    fn check(&self, input: &str) -> Result<String, Error> {
+    fn check(&self, input: &str, path: Option<&str>) -> Result<String, Error> {
         let mut output = "".to_string();
 
-        self.exec(input, &mut output)?;
+        self.exec(input, path, &mut output)?;
 
         Ok(output)
     }
@@ -106,7 +106,7 @@ mod tests {
             None,
         );
 
-        assert_eq!(&cond.check("test: Message").unwrap(), "Then Result!");
+        assert_eq!(&cond.check("test: Message", None).unwrap(), "Then Result!");
     }
 
     #[test]
@@ -124,7 +124,7 @@ mod tests {
         );
 
         assert_eq!(
-            &cond.check("test: Message").unwrap(),
+            &cond.check("test: Message", None).unwrap(),
             "Then test: Message Result!"
         );
     }
@@ -143,7 +143,7 @@ mod tests {
             None,
         );
 
-        assert_eq!(&cond.check("test: Message").unwrap(), "");
+        assert_eq!(&cond.check("test: Message", None).unwrap(), "");
     }
 
     #[test]
@@ -170,6 +170,6 @@ mod tests {
             )),
         );
 
-        assert_eq!(&cond.check("test: Message").unwrap(), "Else Result!");
+        assert_eq!(&cond.check("test: Message", None).unwrap(), "Else Result!");
     }
 }
