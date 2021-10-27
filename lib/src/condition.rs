@@ -5,6 +5,10 @@ use crate::Matcher;
 
 use serde::{Deserialize, Serialize};
 
+pub trait Checkable {
+    fn check(&self, input: &str) -> Result<String, Error>;
+}
+
 /// Condition for matching
 /// If the match returns true it will output the 'then'
 /// result
@@ -48,14 +52,6 @@ where
         }
     }
 
-    pub fn check(&self, input: &str) -> Result<String, Error> {
-        let mut output = "".to_string();
-
-        self.exec(input, &mut output)?;
-
-        Ok(output)
-    }
-
     fn exec(&self, input: &str, output: &mut String) -> Result<(), Error> {
         if self.if_match.matches(input)? {
             if self.output_input {
@@ -68,6 +64,19 @@ where
         }
 
         Ok(())
+    }
+}
+
+impl<T> Checkable for Condition<T>
+where
+    T: Matchable + Default,
+{
+    fn check(&self, input: &str) -> Result<String, Error> {
+        let mut output = "".to_string();
+
+        self.exec(input, &mut output)?;
+
+        Ok(output)
     }
 }
 

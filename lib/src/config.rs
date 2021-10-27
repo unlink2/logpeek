@@ -1,20 +1,21 @@
-use crate::{Condition, Error, Matchable};
+use crate::Checkable;
+use crate::Error;
 use serde::{Deserialize, Serialize};
 
 /// Covers all conditions needed for execution
 #[derive(Default, Clone, Serialize, Deserialize)]
 pub struct Config<T>
 where
-    T: Matchable + Default,
+    T: Checkable + Default,
 {
-    conditions: Vec<Condition<T>>,
+    conditions: Vec<T>,
 }
 
 impl<T> Config<T>
 where
-    T: Matchable + Default,
+    T: Checkable + Default,
 {
-    pub fn new(conditions: Vec<Condition<T>>) -> Self {
+    pub fn new(conditions: Vec<T>) -> Self {
         Self { conditions }
     }
 
@@ -34,6 +35,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::BasicMatchResult;
+    use crate::Condition;
     use crate::MatchResult;
     use crate::Matcher;
     use crate::MatcherKind;
