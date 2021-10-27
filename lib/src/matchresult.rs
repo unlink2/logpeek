@@ -1,11 +1,15 @@
 use serde::{Deserialize, Serialize};
 
+pub trait MatchResponse: Clone + ToString {}
+
 /// A matchresult is a simple output that will
 /// called upon if a condition is met
 #[derive(Clone, Serialize, Deserialize)]
 pub enum MatchResult {
     Basic(BasicMatchResult),
 }
+
+impl MatchResponse for MatchResult {}
 
 impl Default for MatchResult {
     fn default() -> Self {

@@ -1,5 +1,5 @@
 use crate::Error;
-use crate::MatchResult;
+use crate::MatchResponse;
 use crate::Matchable;
 use crate::Matcher;
 
@@ -14,26 +14,28 @@ pub trait Checkable {
 /// result
 /// otherwise it will process an else condition if it exists
 #[derive(Default, Clone, Serialize, Deserialize)]
-pub struct Condition<T>
+pub struct Condition<TMatcher, TResponse>
 where
-    T: Matchable + Default,
+    TMatcher: Matchable + Default,
+    TResponse: MatchResponse + Default,
 {
-    if_match: Matcher<T>,
-    then: MatchResult,
+    if_match: Matcher<TMatcher>,
+    then: TResponse,
     output_input: bool,
-    else_then: Option<Box<Condition<T>>>,
+    else_then: Option<Box<Condition<TMatcher, TResponse>>>,
 }
 
-impl<T> Condition<T>
+impl<TMatcher, TResponse> Condition<TMatcher, TResponse>
 where
-    T: Matchable + Default,
+    TMatcher: Matchable + Default,
+    TResponse: MatchResponse + Default,
 {
     // new that avoids exposing box to the outside
     pub fn new(
-        if_match: Matcher<T>,
-        then: MatchResult,
+        if_match: Matcher<TMatcher>,
+        then: TResponse,
         output_input: bool,
-        else_then: Option<Condition<T>>,
+        else_then: Option<Condition<TMatcher, TResponse>>,
     ) -> Self {
         match else_then {
             Some(else_then) => Self {
@@ -67,9 +69,10 @@ where
     }
 }
 
-impl<T> Checkable for Condition<T>
+impl<TMatcher, TResponse> Checkable for Condition<TMatcher, TResponse>
 where
-    T: Matchable + Default,
+    TMatcher: Matchable + Default,
+    TResponse: MatchResponse + Default,
 {
     fn check(&self, input: &str) -> Result<String, Error> {
         let mut output = "".to_string();
@@ -83,6 +86,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::BasicMatchResult;
+    use crate::MatchResult;
     use crate::MatcherKind;
     use crate::ReMatcher;
 
