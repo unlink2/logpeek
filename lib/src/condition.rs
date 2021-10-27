@@ -22,7 +22,7 @@ where
     if_match: Matcher<TMatcher>,
     then: TResponse,
     output_input: bool,
-    else_then: Option<Box<Condition<TMatcher, TResponse>>>,
+    else_then: Option<Box<Self>>,
 }
 
 impl<TMatcher, TResponse> Condition<TMatcher, TResponse>
@@ -35,7 +35,7 @@ where
         if_match: Matcher<TMatcher>,
         then: TResponse,
         output_input: bool,
-        else_then: Option<Condition<TMatcher, TResponse>>,
+        else_then: Option<Self>,
     ) -> Self {
         match else_then {
             Some(else_then) => Self {
