@@ -6,7 +6,7 @@ description = "Log-file monitor program"
 license = "MIT"
 homepage = "https://github.com/unlink2/logpeek"
 readme = "../README.md"
-edition = "2018"
+edition = "2021"
 
 [lib]
 name = "logpeek"

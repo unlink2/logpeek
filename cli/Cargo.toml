@@ -5,7 +5,7 @@ authors = ["Lukas Krickl <lukas@krickl.dev>"]
 description = "cli"
 license = "MIT"
 homepage = "https://github.com/unlink2/logpeek"
-edition = "2018"
+edition = "2021"
 
 [[bin]]
 name = "logpeek"
