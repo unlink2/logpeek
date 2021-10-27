@@ -67,7 +67,7 @@ impl Interface {
         let reader = BufReader::new(std::fs::File::open(input_file)?);
 
         for line in reader.lines() {
-            if writer.write(self.config.check(&line?, Some(&input_file))?.as_bytes())? > 0 {
+            if writer.write(self.config.check(&line?, Some(input_file))?.as_bytes())? > 0 {
                 writer.write_all(&[b'\n'])?;
             }
         }
