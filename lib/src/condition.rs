@@ -10,20 +10,26 @@ use serde::{Deserialize, Serialize};
 /// result
 /// otherwise it will process an else condition if it exists
 #[derive(Default, Clone, Serialize, Deserialize)]
-pub struct Condition {
-    if_match: Matcher,
+pub struct Condition<T>
+where
+    T: Matchable + Default,
+{
+    if_match: Matcher<T>,
     then: MatchResult,
     output_input: bool,
-    else_then: Option<Box<Condition>>,
+    else_then: Option<Box<Condition<T>>>,
 }
 
-impl Condition {
+impl<T> Condition<T>
+where
+    T: Matchable + Default,
+{
     // new that avoids exposing box to the outside
     pub fn new(
-        if_match: Matcher,
+        if_match: Matcher<T>,
         then: MatchResult,
         output_input: bool,
-        else_then: Option<Condition>,
+        else_then: Option<Condition<T>>,
     ) -> Self {
         match else_then {
             Some(else_then) => Self {

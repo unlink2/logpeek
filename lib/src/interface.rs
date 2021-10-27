@@ -9,7 +9,7 @@ use clap::Parser;
 /// config options
 pub struct Interface {
     opts: Opts,
-    config: Config,
+    config: Config<MatcherKind>,
 }
 
 impl Interface {

@@ -1,14 +1,20 @@
-use crate::{Condition, Error};
+use crate::{Condition, Error, Matchable};
 use serde::{Deserialize, Serialize};
 
 /// Covers all conditions needed for execution
 #[derive(Default, Clone, Serialize, Deserialize)]
-pub struct Config {
-    conditions: Vec<Condition>,
+pub struct Config<T>
+where
+    T: Matchable + Default,
+{
+    conditions: Vec<Condition<T>>,
 }
 
-impl Config {
-    pub fn new(conditions: Vec<Condition>) -> Self {
+impl<T> Config<T>
+where
+    T: Matchable + Default,
+{
+    pub fn new(conditions: Vec<Condition<T>>) -> Self {
         Self { conditions }
     }
 

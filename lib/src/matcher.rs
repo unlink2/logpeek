@@ -12,25 +12,36 @@ pub trait Matchable {
 /// It can match one or many regulal expressions and
 /// support inverting (noting) the expression
 #[derive(Default, Clone, Serialize, Deserialize)]
-pub struct Matcher {
-    kind: MatcherKind,
+pub struct Matcher<T>
+where
+    T: Matchable + Default,
+{
+    #[serde(deserialize_with = "T::deserialize")]
+    #[serde(serialize_with = "T::serialize")]
+    kind: T,
     #[serde(default)]
-    or: Vec<Matcher>,
+    or: Vec<Matcher<T>>,
 
     #[serde(default)]
-    and: Vec<Matcher>,
+    and: Vec<Matcher<T>>,
 
     #[serde(default)]
     not: bool,
 }
 
-impl Matcher {
-    pub fn new(kind: MatcherKind, or: Vec<Matcher>, and: Vec<Matcher>, not: bool) -> Self {
+impl<T> Matcher<T>
+where
+    T: Matchable + Default,
+{
+    pub fn new(kind: T, or: Vec<Matcher<T>>, and: Vec<Matcher<T>>, not: bool) -> Self {
         Self { kind, or, and, not }
     }
 }
 
-impl Matchable for Matcher {
+impl<T> Matchable for Matcher<T>
+where
+    T: Matchable + Default,
+{
     fn matches(&self, input: &str) -> Result<bool, Error> {
         let mut result = self.kind.matches(input)? ^ self.not;
 
