@@ -29,7 +29,7 @@ cargo install --path ./cli --locked
 
 ### Command line
 
-The following command will scan main.ccp for the word main.
+The following command will scan main.cpp for the word main.
 Use --help for more information and a list of available options.
 
 ```sh
